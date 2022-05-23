@@ -1,0 +1,153 @@
+
+/*Section 1*/
+create table DEPTa
+(
+DEPTNO int(2),
+DNAME varchar(15),
+LOC varchar(10)
+);
+desc depta;
+insert into Depta values
+(10, 'ACCOUNTING', 'NEW YORK'),
+(20, 'RESEARCH', 'DALLAS'),
+(30, 'SALES', 'CHICAGO'),
+(40, 'OPERATIONS', 'BOSTON');
+commit;
+select * from depta;
+
+create table EMPa
+(
+EMPNO int(4),
+ENAME varchar(10),
+JOB varchar(9),
+HIREDATE date,
+SAL float(7,2),
+COMM float(7,2),
+DEPTNO int(2)
+);
+desc empa;
+
+insert into EMPa values
+(7839, 'KING', 'MANAGER', '1991-11-17', 5000, NULL, 10),
+(7698, 'BLAKE', 'CLERK', '1981-05-01', 2850, NULL, 30),
+(7782, 'CLARK', 'MANAGER', '1981-06-09', 2450, NULL, 10),
+(7566, 'JONES', 'CLERK', '1981-04-02', '2975', NULL, 20),
+(7654, 'MARTIN', 'SALESMAN', '1981-09-28', 1250, 1400, 30),
+(7499, 'ALLEN', 'SALESMAN', '1981-02-20', 1600, 300, 30);
+
+select * from empa;
+
+/*3*/
+/*Display all the employees where SAL between 2500 and 5000 (inclusive of both).*/
+select * from empa
+where sal between 2500 and 5000;
+
+/*4*/
+/*Display all the ENAMEs in descending order of ENAME.*/
+select ename from empa
+order by ename desc;
+
+/*5*/
+/*Display all the JOBs in lowercase.*/
+select lower(job) from empa;
+
+/*6*/
+/*Display the ENAMEs and the lengths of the ENAMEs.*/
+select ename, length(ename) as "length" from empa;
+
+/*7*/
+/*Display the DEPTNO and the count of employees who belong to that DEPTNO .*/
+select empa.deptno, count(ename) from empa, depta
+where depta.deptno = empa.deptno
+group by deptno;
+
+
+/*8*/
+/*Display the DNAMEs and the ENAMEs who belong to that DNAME.*/
+select ename, dname from empa, depta
+where depta.deptno = empa.deptno;
+
+/*9*/
+/*Display the position at which the string ‘AR’ occurs in the ename.*/
+select substr(ename, 'ar') from empa;
+
+
+/*10*/
+/*Display the HRA for each employee given that HRA is 20% of SAL.*/
+select ename, sal, sal*0.2 as "HRA" from empa;
+
+
+/*Section 2*/
+/*1*/
+create table tempp1
+(
+stringname varchar(20)
+);
+
+insert into tempp1 values
+('DAC'),
+('CDAC');
+
+create table tempp2
+(
+result varchar(20)
+);
+
+delimiter //
+create procedure PROC1()
+begin
+declare res varchar(20);
+set res = (select * from tempp1 
+where stringname like '%CDAC%');
+insert into tempp2 values(res);
+end; //
+delimiter ;
+call PROC1();
+drop procedure PROC1;
+select * from tempp2;
+
+
+/*2*/
+
+create table trng
+(
+triangle varchar(20)
+);
+
+delimiter //
+create function FUNC1(x int, y int, z int)
+returns boolean
+deterministic
+begin
+if(x+y>z) and (y+z>x) and (x+z>y) then
+return true;
+else return false;
+end if;
+end; //
+delimiter ;
+
+delimiter //
+create procedure trng1(x int, y int, z int)
+begin
+declare res varchar(20);
+set res = FUNC1(x, y, z);
+insert into trng values (res);
+end; //
+delimiter ;
+
+call trng1(10,15,20);
+drop procedure trng1;
+select * from trng;
+truncate table trng;
+
+
+
+
+
+
+
+
+
+
+
+
